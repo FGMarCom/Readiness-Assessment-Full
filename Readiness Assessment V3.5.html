@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonprofit Classification Tool | Foundation Group</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #0f172a; line-height: 1.6;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <!-- Header -->
+        <header style="background: #ffffff; padding: 20px 0; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                <a href="#" style="font-size: 24px; font-weight: 700; color: #102a46; text-decoration: none;">Foundation Group</a>
+                <div style="flex: 1; max-width: 500px;">
+                    <div id="progressText" style="font-size: 14px; color: #475569; margin-bottom: 8px; font-weight: 500;">Getting started...</div>
+                    <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                        <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #7da851 0%, #489298 100%); width: 0%; transition: width 0.6s ease;"></div>
+                    </div>
+                </div>
+                <button id="startOverBtn" style="background: #102a46; color: #ffffff; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 14px;">Start Over</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main style="padding: 40px 0; min-height: calc(100vh - 100px);">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" style="display: block;">
+                <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #102a46 0%, #489298 100%); padding: 48px; text-align: center; color: #ffffff;">
+                        <h1 style="font-size: 36px; font-weight: 700; margin: 0 0 16px 0;">Find Your Perfect Nonprofit Structure</h1>
+                        <p style="font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto 32px;">Navigate IRS classifications with confidence and get personalized guidance for your organization</p>
+                        <button onclick="app.start()" style="background: #ffffff; color: #102a46; padding: 16px 48px; border: none; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);">Begin Assessment</button>
+                    </div>
+                    <div style="padding: 48px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                            <div style="background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                <h3 style="color: #102a46; font-size: 18px; margin: 0 0 12px 0;">Precise Classification</h3>
+                                <p style="color: #475569; font-size: 14px; margin: 0;">Answer targeted questions to identify the exact 501(c) status that aligns with your mission and activities.</p>
+                            </div>
+                            <div style="background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                <h3 style="color: #102a46; font-size: 18px; margin: 0 0 12px 0;">State-Specific Guidance</h3>
+                                <p style="color: #475569; font-size: 14px; margin: 0;">Get requirements and considerations specific to your state's nonprofit laws and regulations.</p>
+                            </div>
+                            <div style="background: #f8fafc; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                <h3 style="color: #102a46; font-size: 18px; margin: 0 0 12px 0;">Expert Insights</h3>
+                                <p style="color: #475569; font-size: 14px; margin: 0;">Understand the implications of each classification with clear explanations and practical examples.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Screen -->
+            <div id="questionScreen" style="display: none;">
+                <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); padding: 48px;">
+                    <div id="questionContent">
+                        <!-- Question content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="resultsScreen" style="display: none;">
+                <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); padding: 48px; margin-bottom: 32px; text-align: center;">
+                    <div id="resultBadge" style="display: inline-block; background: #7da851; color: #ffffff; padding: 8px 24px; border-radius: 30px; font-weight: 600; margin-bottom: 24px;">Your Recommended Classification</div>
+                    <h1 id="resultTitle" style="font-size: 36px; font-weight: 700; color: #0f172a; margin: 0 0 16px 0;">Loading...</h1>
+                    <p id="resultSubtitle" style="font-size: 20px; color: #475569; max-width: 600px; margin: 0 auto;">Based on your responses, here's your ideal nonprofit structure</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px; margin-bottom: 32px;">
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                            <div style="background: #102a46; color: #ffffff; padding: 24px;">
+                                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px 0;">Classification Details</h2>
+                                <p style="font-size: 14px; opacity: 0.9; margin: 0;">Essential information about your nonprofit type</p>
+                            </div>
+                            <div id="classificationDetails" style="padding: 24px;">
+                                <!-- Details will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                            <div style="background: #102a46; color: #ffffff; padding: 24px;">
+                                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px 0;">Common Types of Organizations with This Purpose</h2>
+                                <p style="font-size: 14px; opacity: 0.9; margin: 0;">Examples of organizations like yours</p>
+                            </div>
+                            <div id="commonExamples" style="padding: 24px;">
+                                <!-- Examples will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                            <div style="background: #102a46; color: #ffffff; padding: 24px;">
+                                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px 0;">State Requirements</h2>
+                                <p id="stateRequirementsSubtitle" style="font-size: 14px; opacity: 0.9; margin: 0;">Specific to your state</p>
+                            </div>
+                            <div id="stateRequirements" style="padding: 24px;">
+                                <!-- State requirements will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                            <div style="background: #102a46; color: #ffffff; padding: 24px;">
+                                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px 0;">Quick Summary</h2>
+                                <p style="font-size: 14px; opacity: 0.9; margin: 0;">Key points at a glance</p>
+                            </div>
+                            <div id="quickSummary" style="padding: 24px;">
+                                <!-- Summary will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden;">
+                            <div style="background: #102a46; color: #ffffff; padding: 24px;">
+                                <h2 style="font-size: 20px; font-weight: 600; margin: 0 0 4px 0;">Cost Estimates</h2>
+                                <p style="font-size: 14px; opacity: 0.9; margin: 0;">Formation and ongoing costs</p>
+                            </div>
+                            <div id="costEstimates" style="padding: 24px;">
+                                <!-- Costs will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #ffffff; border-radius: 16px; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); padding: 32px; text-align: center;">
+                    <h3 style="margin: 0 0 8px 0;">Ready to Move Forward?</h3>
+                    <p style="margin: 0 0 24px 0;">Foundation Group can guide you through every step of the formation process</p>
+                    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                        <button onclick="window.print()" style="background: #7da851; color: #ffffff; padding: 12px 32px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px;">Print Report</button>
+                        <button onclick="app.contact()" style="background: #7da851; color: #ffffff; padding: 12px 32px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px;">Get Expert Help</button>
+                        <button onclick="app.restart()" style="background: #ffffff; color: #102a46; padding: 12px 32px; border: 2px solid #102a46; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px;">Start Over</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Application state and controller
+        const app = {
+            currentStep: 0,
+            responses: {},
+            
+            // State information
+            states: {
+                'AL': { name: 'Alabama', hasIncomeTax: true, charitableRegistration: true },
+                'AK': { name: 'Alaska', hasIncomeTax: false, charitableRegistration: true },
+                'AZ': { name: 'Arizona', hasIncomeTax: true, charitableRegistration: true },
+                'AR': { name: 'Arkansas', hasIncomeTax: true, charitableRegistration: true },
+                'CA': { name: 'California', hasIncomeTax: true, charitableRegistration: true, special: 'Strict nonprofit laws, AG oversight' },
+                'CO': { name: 'Colorado', hasIncomeTax: true, charitableRegistration: true },
+                'CT': { name: 'Connecticut', hasIncomeTax: true, charitableRegistration: true },
+                'DE': { name: 'Delaware', hasIncomeTax: true, charitableRegistration: false, special: 'Popular for incorporation' },
+                'FL': { name: 'Florida', hasIncomeTax: false, charitableRegistration: true },
+                'GA': { name: 'Georgia', hasIncomeTax: true, charitableRegistration: true },
+                'HI': { name: 'Hawaii', hasIncomeTax: true, charitableRegistration: true },
+                'ID': { name: 'Idaho', hasIncomeTax: true, charitableRegistration: false },
+                'IL': { name: 'Illinois', hasIncomeTax: true, charitableRegistration: true },
+                'IN': { name: 'Indiana', hasIncomeTax: true, charitableRegistration: false },
+                'IA': { name: 'Iowa', hasIncomeTax: true, charitableRegistration: false },
+                'KS': { name: 'Kansas', hasIncomeTax: true, charitableRegistration: true },
+                'KY': { name: 'Kentucky', hasIncomeTax: true, charitableRegistration: true },
+                'LA': { name: 'Louisiana', hasIncomeTax: true, charitableRegistration: true },
+                'ME': { name: 'Maine', hasIncomeTax: true, charitableRegistration: true },
+                'MD': { name: 'Maryland', hasIncomeTax: true, charitableRegistration: true },
+                'MA': { name: 'Massachusetts', hasIncomeTax: true, charitableRegistration: true },
+                'MI': { name: 'Michigan', hasIncomeTax: true, charitableRegistration: true },
+                'MN': { name: 'Minnesota', hasIncomeTax: true, charitableRegistration: true },
+                'MS': { name: 'Mississippi', hasIncomeTax: true, charitableRegistration: true },
+                'MO': { name: 'Missouri', hasIncomeTax: true, charitableRegistration: true },
+                'MT': { name: 'Montana', hasIncomeTax: true, charitableRegistration: false },
+                'NE': { name: 'Nebraska', hasIncomeTax: true, charitableRegistration: false },
+                'NV': { name: 'Nevada', hasIncomeTax: false, charitableRegistration: true },
+                'NH': { name: 'New Hampshire', hasIncomeTax: false, charitableRegistration: true },
+                'NJ': { name: 'New Jersey', hasIncomeTax: true, charitableRegistration: true },
+                'NM': { name: 'New Mexico', hasIncomeTax: true, charitableRegistration: true },
+                'NY': { name: 'New York', hasIncomeTax: true, charitableRegistration: true, special: 'Strict regulations, CHAR500 filing' },
+                'NC': { name: 'North Carolina', hasIncomeTax: true, charitableRegistration: true },
+                'ND': { name: 'North Dakota', hasIncomeTax: true, charitableRegistration: true },
+                'OH': { name: 'Ohio', hasIncomeTax: true, charitableRegistration: true },
+                'OK': { name: 'Oklahoma', hasIncomeTax: true, charitableRegistration: true },
+                'OR': { name: 'Oregon', hasIncomeTax: true, charitableRegistration: true },
+                'PA': { name: 'Pennsylvania', hasIncomeTax: true, charitableRegistration: true },
+                'RI': { name: 'Rhode Island', hasIncomeTax: true, charitableRegistration: true },
+                'SC': { name: 'South Carolina', hasIncomeTax: true, charitableRegistration: true },
+                'SD': { name: 'South Dakota', hasIncomeTax: false, charitableRegistration: false },
+                'TN': { name: 'Tennessee', hasIncomeTax: false, charitableRegistration: true },
+                'TX': { name: 'Texas', hasIncomeTax: false, charitableRegistration: false },
+                'UT': { name: 'Utah', hasIncomeTax: true, charitableRegistration: true },
+                'VT': { name: 'Vermont', hasIncomeTax: true, charitableRegistration: false },
+                'VA': { name: 'Virginia', hasIncomeTax: true, charitableRegistration: true },
+                'WA': { name: 'Washington', hasIncomeTax: false, charitableRegistration: true },
+                'WV': { name: 'West Virginia', hasIncomeTax: true, charitableRegistration: true },
+                'WI': { name: 'Wisconsin', hasIncomeTax: true, charitableRegistration: true },
+                'WY': { name: 'Wyoming', hasIncomeTax: false, charitableRegistration: false }
+            },
+            
+            // All questions defined upfront
+            questions: [
+                {
+                    id: 'state',
+                    type: 'select',
+                    title: 'Where will your nonprofit be headquartered?',
+                    subtitle: 'This helps us provide state-specific guidance and requirements',
+                    info: 'Your state of incorporation affects filing requirements, taxes, and regulations.',
+                    required: true
+                },
+                {
+                    id: 'existing',
+                    type: 'single',
+                    title: 'Is this a new organization or an existing one?',
+                    subtitle: 'This affects your formation timeline and process',
+                    required: true,
+                    options: [
+                        {
+                            value: 'new',
+                            label: 'New Organization',
+                            description: 'We\'re starting from scratch'
+                        },
+                        {
+                            value: 'existing-informal',
+                            label: 'Existing Informal Group',
+                            description: 'We\'ve been operating informally without legal structure'
+                        },
+                        {
+                            value: 'existing-profit',
+                            label: 'Existing For-Profit',
+                            description: 'Converting from a for-profit business'
+                        }
+                    ]
+                },
+                {
+                    id: 'primary-purpose',
+                    type: 'single',
+                    title: 'What is your organization\'s primary purpose?',
+                    subtitle: 'This is the most important factor in determining your classification',
+                    required: true,
+                    options: [
+                        {
+                            value: 'charitable',
+                            label: 'Charitable/Public Benefit',
+                            description: 'Helping the community, education, poverty relief, health, arts, environment, etc.'
+                        },
+                        {
+                            value: 'religious',
+                            label: 'Religious/Faith-Based',
+                            description: 'Church, ministry, or faith-based charitable work'
+                        },
+                        {
+                            value: 'advocacy',
+                            label: 'Advocacy/Social Welfare',
+                            description: 'Promoting social change, community improvement, civic engagement'
+                        },
+                        {
+                            value: 'professional',
+                            label: 'Professional/Business Interest',
+                            description: 'Serving members of a profession, trade, or industry'
+                        },
+                        {
+                            value: 'labor',
+                            label: 'Labor/Agricultural',
+                            description: 'Representing workers, farmers, or agricultural interests'
+                        },
+                        {
+                            value: 'social',
+                            label: 'Social/Recreational',
+                            description: 'Member enjoyment, recreation, hobbies, social activities'
+                        }
+                    ]
+                },
+                {
+                    id: 'charitable-activities',
+                    type: 'multiple',
+                    title: 'Which charitable activities will you engage in?',
+                    subtitle: 'Select all that apply - these must align with IRS-approved purposes',
+                    info: 'The IRS recognizes specific charitable purposes. Your activities must fit within these categories to qualify for 501(c)(3) status.',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'charitable',
+                    options: [
+                        { value: 'relief-poor', label: 'Relief of the Poor or Distressed', description: 'Food banks, homeless services, disaster relief' },
+                        { value: 'education', label: 'Educational', description: 'Schools, training programs, public education' },
+                        { value: 'scientific', label: 'Scientific Research', description: 'Research benefiting the public' },
+                        { value: 'arts', label: 'Arts & Culture', description: 'Museums, theaters, cultural preservation' },
+                        { value: 'health', label: 'Healthcare', description: 'Hospitals, clinics, health education' },
+                        { value: 'environment', label: 'Environmental Protection', description: 'Conservation, sustainability, wildlife protection' },
+                        { value: 'youth', label: 'Youth Development', description: 'Youth programs, mentoring, sports leagues' },
+                        { value: 'community', label: 'Community Development', description: 'Neighborhood improvement, economic development' }
+                    ]
+                },
+                {
+                    id: 'funding-sources',
+                    type: 'single',
+                    title: 'How will your organization be primarily funded?',
+                    subtitle: 'This determines whether you\'ll be a public charity or private foundation',
+                    info: 'Public charities receive broad public support, while private foundations are typically funded by one source.',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'charitable' || responses['primary-purpose'] === 'religious',
+                    options: [
+                        {
+                            value: 'public-broad',
+                            label: 'Broad Public Support',
+                            description: 'Many individual donors, grants, fundraising events'
+                        },
+                        {
+                            value: 'public-fees',
+                            label: 'Program Service Fees',
+                            description: 'Charging for services (within charitable purpose)'
+                        },
+                        {
+                            value: 'public-mixed',
+                            label: 'Mixed Sources',
+                            description: 'Combination of donations, grants, and earned revenue'
+                        },
+                        {
+                            value: 'private-individual',
+                            label: 'Single Individual/Family',
+                            description: 'Primarily one person or family funding'
+                        },
+                        {
+                            value: 'private-corporate',
+                            label: 'Single Corporation',
+                            description: 'Primarily one company funding'
+                        }
+                    ]
+                },
+                {
+                    id: 'religious-type',
+                    type: 'single',
+                    title: 'What type of religious organization are you forming?',
+                    subtitle: 'Churches have special IRS treatment',
+                    info: 'Churches automatically qualify for 501(c)(3) status without applying, though most choose to apply anyway for the determination letter.',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'religious',
+                    options: [
+                        {
+                            value: 'church',
+                            label: 'Church/House of Worship',
+                            description: 'Congregation with regular worship services'
+                        },
+                        {
+                            value: 'religious-order',
+                            label: 'Religious Order',
+                            description: 'Monastery, convent, or religious community'
+                        },
+                        {
+                            value: 'ministry',
+                            label: 'Religious Ministry',
+                            description: 'Faith-based service organization (not a church)'
+                        },
+                        {
+                            value: 'religious-education',
+                            label: 'Religious School',
+                            description: 'Seminary, religious education institution'
+                        }
+                    ]
+                },
+                {
+                    id: 'advocacy-activities',
+                    type: 'multiple',
+                    title: 'What advocacy activities do you plan?',
+                    subtitle: 'This determines if you can be 501(c)(3) or need 501(c)(4)',
+                    info: '501(c)(3) organizations can do limited lobbying but NO political campaign activity. 501(c)(4) organizations have much more freedom for advocacy.',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'advocacy' || responses['primary-purpose'] === 'charitable',
+                    options: [
+                        { value: 'education', label: 'Public Education', description: 'Educating about issues without advocating specific legislation' },
+                        { value: 'lobbying-limited', label: 'Limited Lobbying', description: 'Occasional advocacy for legislation (less than 20% of activities)' },
+                        { value: 'lobbying-substantial', label: 'Substantial Lobbying', description: 'Regular legislative advocacy as a primary activity' },
+                        { value: 'political-campaigns', label: 'Political Campaign Activity', description: 'Supporting or opposing candidates for office' },
+                        { value: 'community-organizing', label: 'Community Organizing', description: 'Mobilizing communities for social change' }
+                    ]
+                },
+                {
+                    id: 'professional-scope',
+                    type: 'single',
+                    title: 'What is the scope of your professional organization?',
+                    subtitle: 'This helps determine your specific classification',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'professional',
+                    options: [
+                        {
+                            value: 'trade-association',
+                            label: 'Trade/Industry Association',
+                            description: 'Representing businesses in a specific industry'
+                        },
+                        {
+                            value: 'professional-society',
+                            label: 'Professional Society',
+                            description: 'Individual professionals (doctors, lawyers, engineers, etc.)'
+                        },
+                        {
+                            value: 'chamber',
+                            label: 'Chamber of Commerce',
+                            description: 'Local business community organization'
+                        },
+                        {
+                            value: 'business-league',
+                            label: 'Business League',
+                            description: 'Improving conditions for a line of business'
+                        }
+                    ]
+                },
+                {
+                    id: 'social-membership',
+                    type: 'single',
+                    title: 'How will membership work in your social organization?',
+                    subtitle: 'Social clubs must be truly member-focused',
+                    info: '501(c)(7) social clubs must exist primarily for member enjoyment and can only receive limited income from non-members.',
+                    required: true,
+                    condition: (responses) => responses['primary-purpose'] === 'social',
+                    options: [
+                        {
+                            value: 'closed-membership',
+                            label: 'Closed Membership',
+                            description: 'Limited membership with approval process'
+                        },
+                        {
+                            value: 'open-membership',
+                            label: 'Open Membership',
+                            description: 'Anyone can join by paying dues'
+                        },
+                        {
+                            value: 'invitation-only',
+                            label: 'Invitation Only',
+                            description: 'Members must be invited/sponsored'
+                        }
+                    ]
+                },
+                {
+                    id: 'geographic-scope',
+                    type: 'single',
+                    title: 'What will be your geographic scope?',
+                    subtitle: 'This affects filing requirements and operational considerations',
+                    required: true,
+                    options: [
+                        { value: 'local', label: 'Local', description: 'City or county level' },
+                        { value: 'state', label: 'Statewide', description: 'Operating throughout one state' },
+                        { value: 'regional', label: 'Regional', description: 'Multiple states in a region' },
+                        { value: 'national', label: 'National', description: 'Throughout the United States' },
+                        { value: 'international', label: 'International', description: 'Including operations outside the US' }
+                    ]
+                },
+                {
+                    id: 'conversion-assets',
+                    type: 'single',
+                    title: 'What will happen to the for-profit\'s assets?',
+                    subtitle: 'This is critical for IRS approval',
+                    info: 'Converting to nonprofit requires permanently dedicating assets to charitable purposes. Personal benefit is prohibited.',
+                    required: true,
+                    condition: (responses) => responses['existing'] === 'existing-profit',
+                    options: [
+                        {
+                            value: 'donate-all',
+                            label: 'Donate All Assets',
+                            description: 'All assets will be irrevocably dedicated to nonprofit purposes'
+                        },
+                        {
+                            value: 'partial-conversion',
+                            label: 'Partial Conversion',
+                            description: 'Some assets retained personally (may complicate approval)'
+                        },
+                        {
+                            value: 'new-entity',
+                            label: 'Create New Entity',
+                            description: 'Start fresh nonprofit, keep for-profit separate'
+                        }
+                    ]
+                },
+                {
+                    id: 'membership-structure',
+                    type: 'single',
+                    title: 'Will your organization have voting members?',
+                    subtitle: 'This affects governance and control structure',
+                    info: 'Members typically elect the board and vote on major decisions. Without members, the board is self-perpetuating.',
+                    required: true,
+                    options: [
+                        {
+                            value: 'no-members',
+                            label: 'No Voting Members',
+                            description: 'Board governs without member oversight'
+                        },
+                        {
+                            value: 'members',
+                            label: 'Yes, Voting Members',
+                            description: 'Members elect board and vote on key issues'
+                        },
+                        {
+                            value: 'sole-member',
+                            label: 'Sole Member Structure',
+                            description: 'One person/entity maintains control'
+                        }
+                    ]
+                }
+            ],
+            
+            // Get applicable questions based on responses
+            getApplicableQuestions() {
+                return this.questions.filter(q => {
+                    if (!q.condition) return true;
+                    return q.condition(this.responses);
+                });
+            },
+            
+            // Get current question
+            getCurrentQuestion() {
+                const applicableQuestions = this.getApplicableQuestions();
+                return applicableQuestions[this.currentStep];
+            },
+            
+            // Start assessment
+            start() {
+                this.currentStep = 0;
+                this.responses = {};
+                this.showScreen('questionScreen');
+                this.renderQuestion();
+            },
+            
+            // Render current question
+            renderQuestion() {
+                const question = this.getCurrentQuestion();
+                if (!question) {
+                    this.showResults();
+                    return;
+                }
+                
+                const totalQuestions = this.getApplicableQuestions().length;
+                const progress = ((this.currentStep + 1) / totalQuestions) * 100;
+                
+                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('progressText').textContent = `Step ${this.currentStep + 1}`;
+                
+                let html = `
+                    <div style="margin-bottom: 32px;">
+                        <span style="display: inline-block; background: #7da851; color: #ffffff; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Step ${this.currentStep + 1}</span>
+                        <h2 style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 0 0 12px 0;">${question.title}</h2>
+                        <p style="font-size: 18px; color: #475569; margin: 0;">${question.subtitle}</p>
+                    </div>
+                `;
+                
+                if (question.info) {
+                    html += `
+                        <div style="background: rgba(125, 168, 81, 0.1); border: 1px solid rgba(125, 168, 81, 0.3); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;">
+                            <p style="color: #1e293b; font-size: 14px; margin: 0; line-height: 1.5;">${question.info}</p>
+                        </div>
+                    `;
+                }
+                
+                // Render input based on type
+                if (question.type === 'select' && question.id === 'state') {
+                    html += `
+                        <div style="margin-top: 24px;">
+                            <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 8px;">Select your state:</label>
+                            <select id="state-select" onchange="app.handleStateSelect(this.value)" style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; cursor: pointer;">
+                                <option value="">Choose a state...</option>
+                                ${Object.entries(this.states).map(([code, info]) => `
+                                    <option value="${code}">${info.name}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    `;
+                } else if (question.type === 'single') {
+                    html += `
+                        <div style="display: grid; gap: 16px; margin-top: 32px;">
+                            ${question.options.map((option, index) => `
+                                <div onclick="app.selectSingle('${question.id}', '${option.value}')" style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 24px; cursor: pointer; transition: all 0.2s;">
+                                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                        <div style="width: 40px; height: 40px; background: #102a46; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;">${String.fromCharCode(65 + index)}</div>
+                                        <div style="font-size: 18px; font-weight: 600; color: #0f172a; flex: 1;">${option.label}</div>
+                                    </div>
+                                    ${option.description ? `<div style="color: #475569; font-size: 14px; margin-left: 56px;">${option.description}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else if (question.type === 'multiple') {
+                    html += `
+                        <div style="display: grid; gap: 12px; margin-top: 24px;">
+                            ${question.options.map(option => `
+                                <div onclick="app.toggleCheckbox('${question.id}', '${option.value}')" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer;">
+                                    <div style="width: 24px; height: 24px; border: 2px solid #94a3b8; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;"></div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">${option.label}</div>
+                                        ${option.description ? `<div style="font-size: 14px; color: #475569;">${option.description}</div>` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 32px; border-top: 1px solid #e2e8f0;">
+                        ${this.currentStep > 0 ? `
+                            <button onclick="app.previousQuestion()" style="padding: 12px 32px; border: 2px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 16px;">Previous</button>
+                        ` : '<div></div>'}
+                        <button id="nextBtn" onclick="app.nextQuestion()" ${question.required ? 'disabled' : ''} style="padding: 12px 32px; background: ${question.required ? '#cbd5e1' : '#7da851'}; color: #ffffff; border: none; border-radius: 12px; font-weight: 600; cursor: ${question.required ? 'not-allowed' : 'pointer'}; font-size: 16px;">
+                            Continue
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('questionContent').innerHTML = html;
+                
+                // Restore previous selections if any
+                this.restoreSelections(question);
+            },
+            
+            // Handle state selection
+            handleStateSelect(value) {
+                this.responses['state'] = value;
+                const btn = document.getElementById('nextBtn');
+                if (value) {
+                    btn.disabled = false;
+                    btn.style.background = '#7da851';
+                    btn.style.cursor = 'pointer';
+                } else {
+                    btn.disabled = true;
+                    btn.style.background = '#cbd5e1';
+                    btn.style.cursor = 'not-allowed';
+                }
+            },
+            
+            // Handle single choice selection
+            selectSingle(questionId, value) {
+                this.responses[questionId] = value;
+                
+                // Update UI
+                const options = event.currentTarget.parentElement.children;
+                for (let option of options) {
+                    option.style.border = '2px solid #e2e8f0';
+                    option.style.background = '#f8fafc';
+                    option.style.boxShadow = 'none';
+                    const letter = option.querySelector('div > div');
+                    if (letter) letter.style.background = '#102a46';
+                }
+                
+                event.currentTarget.style.border = '2px solid #7da851';
+                event.currentTarget.style.background = 'rgba(125, 168, 81, 0.15)';
+                event.currentTarget.style.boxShadow = '0 0 0 3px rgba(125, 168, 81, 0.2)';
+                const selectedLetter = event.currentTarget.querySelector('div > div');
+                if (selectedLetter) selectedLetter.style.background = '#7da851';
+                
+                const btn = document.getElementById('nextBtn');
+                btn.disabled = false;
+                btn.style.background = '#7da851';
+                btn.style.cursor = 'pointer';
+            },
+            
+            // Handle checkbox toggle
+            toggleCheckbox(questionId, value) {
+                if (!this.responses[questionId]) {
+                    this.responses[questionId] = [];
+                }
+                
+                const checkbox = event.currentTarget;
+                const checkDiv = checkbox.querySelector('div');
+                const values = this.responses[questionId];
+                const index = values.indexOf(value);
+                
+                if (index > -1) {
+                    values.splice(index, 1);
+                    checkbox.style.border = '1px solid #e2e8f0';
+                    checkbox.style.background = '#f8fafc';
+                    checkDiv.style.background = 'transparent';
+                    checkDiv.style.border = '2px solid #94a3b8';
+                    checkDiv.innerHTML = '';
+                } else {
+                    values.push(value);
+                    checkbox.style.border = '1px solid #7da851';
+                    checkbox.style.background = 'rgba(125, 168, 81, 0.1)';
+                    checkDiv.style.background = '#7da851';
+                    checkDiv.style.border = '2px solid #7da851';
+                    checkDiv.innerHTML = '✓';
+                    checkDiv.style.color = 'white';
+                    checkDiv.style.fontWeight = '700';
+                    checkDiv.style.fontSize = '14px';
+                }
+                
+                const btn = document.getElementById('nextBtn');
+                if (values.length === 0) {
+                    btn.disabled = true;
+                    btn.style.background = '#cbd5e1';
+                    btn.style.cursor = 'not-allowed';
+                } else {
+                    btn.disabled = false;
+                    btn.style.background = '#7da851';
+                    btn.style.cursor = 'pointer';
+                }
+            },
+            
+            // Restore previous selections
+            restoreSelections(question) {
+                const answer = this.responses[question.id];
+                if (!answer) return;
+                
+                if (question.type === 'select') {
+                    document.getElementById('state-select').value = answer;
+                    this.handleStateSelect(answer);
+                } else if (question.type === 'single') {
+                    // Simulate click on the selected option
+                    const options = document.querySelectorAll('[onclick*="selectSingle"]');
+                    options.forEach(option => {
+                        if (option.onclick.toString().includes(answer)) {
+                            option.click();
+                        }
+                    });
+                } else if (question.type === 'multiple' && Array.isArray(answer)) {
+                    // Simulate click on selected checkboxes
+                    answer.forEach(value => {
+                        const checkboxes = document.querySelectorAll('[onclick*="toggleCheckbox"]');
+                        checkboxes.forEach(checkbox => {
+                            if (checkbox.onclick.toString().includes(value)) {
+                                checkbox.click();
+                            }
+                        });
+                    });
+                }
+            },
+            
+            // Navigate to next question
+            nextQuestion() {
+                this.currentStep++;
+                
+                // Skip questions that don't apply
+                while (this.getCurrentQuestion() && this.getCurrentQuestion().condition && !this.getCurrentQuestion().condition(this.responses)) {
+                    this.currentStep++;
+                }
+                
+                this.renderQuestion();
+            },
+            
+            // Navigate to previous question
+            previousQuestion() {
+                this.currentStep--;
+                
+                // Skip questions that don't apply (going backwards)
+                while (this.currentStep > 0 && this.getCurrentQuestion().condition && !this.getCurrentQuestion().condition(this.responses)) {
+                    this.currentStep--;
+                }
+                
+                this.renderQuestion();
+            },
+            
+            // Show results
+            showResults() {
+                const classification = this.determineClassification();
+                this.displayResults(classification);
+                this.showScreen('resultsScreen');
+                
+                document.getElementById('progressBar').style.width = '100%';
+                document.getElementById('progressText').textContent = 'Assessment Complete!';
+            },
+            
+            // Determine classification
+            determineClassification() {
+                const purpose = this.responses['primary-purpose'];
+                const advocacy = this.responses['advocacy-activities'] || [];
+                const funding = this.responses['funding-sources'];
+                
+                let result = {
+                    type: '',
+                    subtype: '',
+                    title: '',
+                    description: '',
+                    badge: '',
+                    details: {},
+                    commonExamples: [],
+                    costs: {},
+                    keyPoints: [],
+                    stateRequirements: []
+                };
+                
+                // Classification logic
+                if (purpose === 'charitable' || purpose === 'religious') {
+                    if (advocacy.includes('political-campaigns')) {
+                        result.type = '501(c)(4)';
+                        result.title = '501(c)(4) Social Welfare Organization';
+                        result.description = 'Your plans for political campaign activity disqualify you from 501(c)(3) status. A 501(c)(4) allows unlimited lobbying and limited political activity.';
+                        result.badge = 'Social Welfare';
+                    } else if (advocacy.includes('lobbying-substantial')) {
+                        result.type = '501(c)(4)';
+                        result.title = '501(c)(4) Social Welfare Organization';
+                        result.description = 'Substantial lobbying activity requires 501(c)(4) status. You can still do charitable work but without tax-deductible donations.';
+                        result.badge = 'Social Welfare';
+                    } else {
+                        result.type = '501(c)(3)';
+                        
+                        if (purpose === 'religious' && this.responses['religious-type'] === 'church') {
+                            result.subtype = 'church';
+                            result.title = '501(c)(3) Church';
+                            result.description = 'Churches have automatic tax-exempt status and special benefits, though most choose to apply for IRS recognition.';
+                            result.badge = 'Religious';
+                        } else if (funding && (funding.includes('private-individual') || funding.includes('private-corporate'))) {
+                            result.subtype = 'private-foundation';
+                            result.title = '501(c)(3) Private Foundation';
+                            result.description = 'With primary funding from one source, you\'ll be classified as a private foundation with specific operating rules.';
+                            result.badge = 'Private Foundation';
+                        } else {
+                            result.subtype = 'public-charity';
+                            result.title = '501(c)(3) Public Charity';
+                            result.description = 'The gold standard for nonprofits - tax-deductible donations, grant eligibility, and public trust.';
+                            result.badge = 'Public Charity';
+                        }
+                    }
+                } else if (purpose === 'advocacy') {
+                    result.type = '501(c)(4)';
+                    result.title = '501(c)(4) Social Welfare Organization';
+                    result.description = 'Perfect for advocacy organizations that need freedom to lobby and engage in political activities.';
+                    result.badge = 'Advocacy';
+                } else if (purpose === 'professional') {
+                    result.type = '501(c)(6)';
+                    result.title = '501(c)(6) Business League';
+                    result.description = 'Ideal for trade associations, professional societies, and chambers of commerce serving business interests.';
+                    result.badge = 'Professional';
+                } else if (purpose === 'labor') {
+                    result.type = '501(c)(5)';
+                    result.title = '501(c)(5) Labor/Agricultural Organization';
+                    result.description = 'Designed for unions, farm cooperatives, and organizations serving worker or agricultural interests.';
+                    result.badge = 'Labor/Agricultural';
+                } else if (purpose === 'social') {
+                    result.type = '501(c)(7)';
+                    result.title = '501(c)(7) Social Club';
+                    result.description = 'For organizations focused on member recreation and social activities, not public benefit.';
+                    result.badge = 'Social Club';
+                }
+                
+                // Add detailed information
+                this.addDetailedInformation(result);
+                
+                return result;
+            },
+            
+            // Add detailed information
+            addDetailedInformation(result) {
+                const state = this.responses['state'];
+                const stateData = this.states[state];
+                
+                // Common details
+                result.details = {
+                    'Tax Status': 'Federal income tax exempt',
+                    'State': stateData.name,
+                    'Governance': this.responses['membership-structure'] === 'no-members' ? 'Board-governed' : 'Member-governed'
+                };
+                
+                // Type-specific details
+                switch (result.type) {
+                    case '501(c)(3)':
+                        result.details['Donations'] = 'Tax-deductible for donors';
+                        result.details['Political Activity'] = 'Prohibited';
+                        result.details['Lobbying'] = 'Limited to insubstantial amount';
+                        
+                        if (result.subtype === 'public-charity') {
+                            result.details['Public Support Test'] = 'Must maintain broad public support';
+                            result.commonExamples = [
+                                'Food banks and homeless shelters',
+                                'Educational institutions and schools',
+                                'Museums and cultural centers',
+                                'Healthcare clinics and hospitals',
+                                'Environmental conservation groups',
+                                'Youth mentoring programs',
+                                'Community development organizations',
+                                'Animal rescue shelters'
+                            ];
+                            result.costs = {
+                                'State incorporation': '$50-$300',
+                                'IRS Form 1023': '$600',
+                                'Professional assistance': '$2,500-$7,500'
+                            };
+                            result.keyPoints = [
+                                'Tax-deductible donations',
+                                'Eligible for grants',
+                                'Must serve public benefit',
+                                'No political activity'
+                            ];
+                        } else if (result.subtype === 'private-foundation') {
+                            result.details['Excise Tax'] = '1.39% on investment income';
+                            result.details['Distribution'] = 'Must distribute 5% annually';
+                            result.commonExamples = [
+                                'Family foundations',
+                                'Corporate foundations',
+                                'Grant-making foundations',
+                                'Scholarship foundations',
+                                'Research foundations'
+                            ];
+                            result.costs = {
+                                'State incorporation': '$50-$300',
+                                'IRS Form 1023': '$600',
+                                'Professional assistance': '$3,500-$10,000'
+                            };
+                            result.keyPoints = [
+                                'Funded by one source',
+                                'Must distribute 5% annually',
+                                'Pay excise tax on investments',
+                                'More restrictions than public charity'
+                            ];
+                        } else if (result.subtype === 'church') {
+                            result.details['Automatic Exemption'] = 'Tax-exempt without applying';
+                            result.details['Annual Filing'] = 'Exempt from Form 990';
+                            result.commonExamples = [
+                                'Churches and houses of worship',
+                                'Religious congregations',
+                                'Denominational organizations',
+                                'Religious orders and monasteries',
+                                'Integrated auxiliaries of churches'
+                            ];
+                            result.costs = {
+                                'State incorporation': '$50-$300',
+                                'IRS Form 1023 (optional)': '$600',
+                                'Professional assistance': '$1,500-$5,000'
+                            };
+                            result.keyPoints = [
+                                'Automatic tax exemption',
+                                'No annual filing required',
+                                'Can provide housing allowance',
+                                'Most still apply for IRS letter'
+                            ];
+                        }
+                        break;
+                        
+                    case '501(c)(4)':
+                        result.details['Donations'] = 'NOT tax-deductible';
+                        result.details['Political Activity'] = 'Allowed (not primary)';
+                        result.details['Lobbying'] = 'Unlimited';
+                        result.commonExamples = [
+                            'Civic leagues and community associations',
+                            'Homeowners associations',
+                            'Volunteer fire departments',
+                            'Community beautification groups',
+                            'Social welfare advocacy organizations',
+                            'Environmental advocacy groups',
+                            'Civil rights organizations',
+                            'Community health advocacy groups'
+                        ];
+                        result.costs = {
+                            'State incorporation': '$50-$300',
+                            'Form 8976': '$600',
+                            'Professional assistance': '$2,000-$5,000'
+                        };
+                        result.keyPoints = [
+                            'NO tax deduction for donors',
+                            'Can engage in politics',
+                            'Unlimited lobbying',
+                            'More flexibility'
+                        ];
+                        break;
+                        
+                    case '501(c)(5)':
+                        result.details['Donations'] = 'Not tax-deductible';
+                        result.details['Member Focus'] = 'Labor/agricultural interests';
+                        result.details['Political Activity'] = 'Allowed';
+                        result.commonExamples = [
+                            'Labor unions',
+                            'Agricultural cooperatives',
+                            'Horticultural organizations',
+                            'Farm bureaus',
+                            'Teacher unions',
+                            'Trade unions',
+                            'Agricultural marketing associations',
+                            'Farming improvement groups'
+                        ];
+                        result.costs = {
+                            'State incorporation': '$50-$300',
+                            'Form 1024': '$600',
+                            'Professional assistance': '$2,000-$5,000'
+                        };
+                        result.keyPoints = [
+                            'Serves workers/farmers',
+                            'Can do collective bargaining',
+                            'Political activity allowed',
+                            'Member-focused'
+                        ];
+                        break;
+                        
+                    case '501(c)(6)':
+                        result.details['Donations'] = 'May be business expense';
+                        result.details['Primary Benefit'] = 'Members and industries';
+                        result.details['Lobbying'] = 'Allowed for industry';
+                        result.commonExamples = [
+                            'Chambers of Commerce',
+                            'Trade associations',
+                            'Professional associations',
+                            'Business leagues',
+                            'Real estate boards',
+                            'Industry advocacy groups',
+                            'Professional certification boards',
+                            'Tourism boards'
+                        ];
+                        result.costs = {
+                            'State incorporation': '$50-$300',
+                            'Form 1024-A': '$600',
+                            'Professional assistance': '$2,000-$5,000'
+                        };
+                        result.keyPoints = [
+                            'Serves business interests',
+                            'Funded by member dues',
+                            'Can lobby for industry',
+                            'Not for public benefit'
+                        ];
+                        break;
+                        
+                    case '501(c)(7)':
+                        result.details['Donations'] = 'NOT tax-deductible';
+                        result.details['Revenue Limits'] = 'Max 35% from non-members';
+                        result.details['Primary Purpose'] = 'Member recreation';
+                        result.commonExamples = [
+                            'Country clubs',
+                            'Social clubs',
+                            'Hobby clubs',
+                            'Sports clubs',
+                            'Garden clubs',
+                            'Book clubs',
+                            'Alumni associations',
+                            'Fraternity/sorority groups'
+                        ];
+                        result.costs = {
+                            'State incorporation': '$50-$300',
+                            'Form 1024': '$600',
+                            'Professional assistance': '$2,000-$5,000'
+                        };
+                        result.keyPoints = [
+                            'Members-only benefits',
+                            'Limited public revenue',
+                            'Social/recreational focus',
+                            'Cannot discriminate'
+                        ];
+                        break;
+                }
+                
+                // State requirements
+                if (stateData.hasIncomeTax) {
+                    result.stateRequirements.push('Apply for state income tax exemption');
+                }
+                
+                if (stateData.charitableRegistration && (result.type === '501(c)(3)' || result.type === '501(c)(4)')) {
+                    result.stateRequirements.push('Register with state charity regulator');
+                }
+                
+                result.stateRequirements.push('File annual state report');
+                result.stateRequirements.push('Check local business license requirements');
+                
+                if (result.type === '501(c)(3)') {
+                    result.stateRequirements.push('Apply for sales tax exemption');
+                    result.stateRequirements.push('Apply for property tax exemption (if applicable)');
+                }
+                
+                if (stateData.special) {
+                    result.stateRequirements.push(`Note: ${stateData.special}`);
+                }
+            },
+            
+            // Display results
+            displayResults(classification) {
+                document.getElementById('resultBadge').textContent = classification.badge;
+                document.getElementById('resultTitle').textContent = classification.title;
+                document.getElementById('resultSubtitle').textContent = classification.description;
+                
+                // Classification details
+                const detailsHTML = Object.entries(classification.details).map(([label, value]) => `
+                    <div style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px;">
+                        <span style="color: #7da851; font-weight: 700;">✓</span>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">${label}</div>
+                            <div style="color: #475569; font-size: 14px;">${value}</div>
+                        </div>
+                    </div>
+                `).join('');
+                document.getElementById('classificationDetails').innerHTML = detailsHTML;
+                
+                // Common examples
+                const examplesHTML = classification.commonExamples.map(example => `
+                    <div style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px;">
+                        <span style="color: #7da851;">•</span>
+                        <div style="flex: 1; color: #475569; font-size: 14px;">${example}</div>
+                    </div>
+                `).join('');
+                document.getElementById('commonExamples').innerHTML = examplesHTML;
+                
+                // State requirements
+                const stateData = this.states[this.responses['state']];
+                document.getElementById('stateRequirementsSubtitle').textContent = `Specific to ${stateData.name}`;
+                
+                const stateHTML = classification.stateRequirements.map(req => `
+                    <div style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px;">
+                        <span style="color: #7da851;">→</span>
+                        <div style="flex: 1; color: #475569; font-size: 14px;">${req}</div>
+                    </div>
+                `).join('');
+                document.getElementById('stateRequirements').innerHTML = stateHTML;
+                
+                // Quick summary
+                const summaryHTML = `
+                    <div style="background: rgba(125, 168, 81, 0.1); border: 1px solid rgba(125, 168, 81, 0.3); border-radius: 12px; padding: 20px;">
+                        <div style="font-weight: 600; color: #0f172a; margin-bottom: 12px;">Key Points</div>
+                        ${classification.keyPoints.map(point => `
+                            <div style="color: #334155; font-size: 14px; margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                <span style="position: absolute; left: 0; color: #7da851; font-weight: bold;">→</span>
+                                ${point}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                document.getElementById('quickSummary').innerHTML = summaryHTML;
+                
+                // Cost estimates
+                if (classification.costs) {
+                    const costsHTML = Object.entries(classification.costs).map(([item, cost]) => `
+                        <div style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px;">
+                            <span style="color: #7da851;">$</span>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #0f172a; margin-bottom: 4px;">${item}</div>
+                                <div style="color: #475569; font-size: 14px;">${cost}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('costEstimates').innerHTML = costsHTML;
+                }
+            },
+            
+            // Show screen
+            showScreen(screenId) {
+                document.getElementById('welcomeScreen').style.display = 'none';
+                document.getElementById('questionScreen').style.display = 'none';
+                document.getElementById('resultsScreen').style.display = 'none';
+                document.getElementById(screenId).style.display = 'block';
+                window.scrollTo(0, 0);
+            },
+            
+            // Restart assessment
+            restart() {
+                if (confirm('Are you sure you want to start over?')) {
+                    this.currentStep = 0;
+                    this.responses = {};
+                    this.showScreen('welcomeScreen');
+                    document.getElementById('progressBar').style.width = '0%';
+                    document.getElementById('progressText').textContent = 'Getting started...';
+                }
+            },
+            
+            // Contact
+            contact() {
+                window.location.href = 'https://www.501c3.org/contact/';
+            }
+        };
+        
+        // Initialize start over button
+        document.getElementById('startOverBtn').addEventListener('click', () => app.restart());
+    </script>
+</body>
+</html>
